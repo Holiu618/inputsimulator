@@ -95,7 +95,7 @@ where
     F: Fn(usize) -> Message + 'static + Send + Sync,
 {
     let selected_index = choices.iter().position(|&mode| mode == current_mode.to_string());
-    Dropdown::new(choices, selected_index, map_fn)
+    Dropdown::new(std::borrow::Cow::Borrowed(choices), selected_index, map_fn)
 }
 
 pub fn build_key_behavior_dropdown(current_mode: KeyBehaviorMode) -> Dropdown<'static, &'static str, Message, Message> {
