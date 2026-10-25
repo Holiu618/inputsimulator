@@ -1,7 +1,7 @@
 use cosmic::{
-    iced::{Length, Element},
+    iced::Length,
     widget::{button, text, Column, Container, Row, Space},
-    Theme,
+    Element, Theme,
 };
 use crate::{
     app::Message,
@@ -39,7 +39,7 @@ impl<'a> View<'a> {
         }
     }
 
-    pub fn build(&self) -> Element<'a, Message, Theme> {
+    pub fn build(&self) -> Element<'a, Message> {
         let main_content = self.build_main_content();
         let settings_panel = self.build_settings_panel();
         
@@ -66,7 +66,7 @@ impl<'a> View<'a> {
             .into()
     }
     
-    fn build_main_content(&self) -> Column<'a, Message> {
+    fn build_main_content(&self) -> Column<'a, Message, Theme> {
         let mut column = Column::new().spacing(20);
         
         let toggle_icon = if self.settings_panel_open {
@@ -77,7 +77,7 @@ impl<'a> View<'a> {
         
         let title_row = Row::new()
             .push(text::heading("Input Simulator").size(24))
-            .push(Space::with_width(Length::Fill))
+            .push(Space::new().width(Length::Fill))
             .push(
                 button::icon(cosmic::widget::icon::from_name(toggle_icon))
                     .on_press(Message::ToggleSettingsPanel)
@@ -110,14 +110,14 @@ impl<'a> View<'a> {
                 .push(text::body(format!("Captured Keys: {}", captured_keys_text)).size(16))
                 .push(components::build_mouse_buttons());
                 
-            column = column.push(Space::with_height(Length::Fill));
+            column = column.push(Space::new().height(Length::Fill));
             column = column.push(
                 Row::new()
                     .push(
                         button::text("OK")
                             .on_press(Message::FinalizeKeys)
                     )
-                    .push(Space::with_width(Length::Fill))
+                    .push(Space::new().width(Length::Fill))
                     .push(
                         button::text("Cancel")
                             .on_press(Message::CancelCapture)
@@ -127,7 +127,7 @@ impl<'a> View<'a> {
         } else {
             column = column
                 .push(components::build_selected_keys_text(&self.app_data_guard.selected_keys))
-                .push(Space::with_height(Length::Fill));
+                .push(Space::new().height(Length::Fill));
         }
         if self.is_capturing_hotkey {
             let hotkey_text = components::format_hotkey_text(
@@ -160,14 +160,14 @@ impl<'a> View<'a> {
             column = column.push(
                 Row::new()
                     .push(Container::new(components::build_start_button(self.is_running)))
-                    .push(Space::with_width(Length::Fill))
+                    .push(Space::new().width(Length::Fill))
             );
         }
 
         column
     }
     
-    fn build_settings_panel(&self) -> Column<'a, Message> {
+    fn build_settings_panel(&self) -> Column<'a, Message, Theme> {
         let mut column = Column::new().spacing(20);
         
         column = column.push(text::heading("Settings").size(20));
@@ -199,11 +199,11 @@ impl<'a> View<'a> {
             column = column.push(components::interval_controls(self.interval, &self.app_data_guard));
         }
         
-        column = column.push(Space::with_height(Length::Fill));
+        column = column.push(Space::new().height(Length::Fill));
         if !self.is_capturing_hotkey {
             column = column.push(
                 Row::new()
-                    .push(Space::with_width(Length::Fill))
+                    .push(Space::new().width(Length::Fill))
                     .push(
                         button::text(format!("Global Hotkey: {}", components::format_hotkey_text(
                             self.app_data_guard.global_keybind.modifiers.ctrl,

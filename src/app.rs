@@ -1,10 +1,10 @@
 use cosmic::{
     app::{Core, Task},
     iced::{
+        core::SmolStr,
         keyboard::{self, Key},
         Event, Subscription,
     },
-    iced_core::SmolStr,
     Application, ApplicationExt, Element
 };
 use evdev_rs::enums::EventCode;
@@ -561,16 +561,19 @@ pub enum Message {
 fn timer_subscription(interval_ms: u64) -> Subscription<Message> {
     use cosmic::iced::futures::stream;
 
-    Subscription::run_with_id(
-        "ui-refresh-timer",
-        stream::unfold(
-            std::time::Instant::now(),
-            move |_last_tick| {               
-                async move {
-                    smol::Timer::after(std::time::Duration::from_millis(interval_ms)).await;
-                    Some((Message::RefreshUiState, std::time::Instant::now()))
+    Subscription::run_with(
+        interval_ms,
+        |interval| {
+            let interval = *interval;
+            stream::unfold(
+                std::time::Instant::now(),
+                move |_last_tick| {               
+                    async move {
+                        smol::Timer::after(std::time::Duration::from_millis(interval)).await;
+                        Some((Message::RefreshUiState, std::time::Instant::now()))
+                    }
                 }
-            }
-        )
+            )
+        }
     )
 }

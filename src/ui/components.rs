@@ -1,7 +1,7 @@
 use cosmic::{
     iced::Length,
     widget::{button, Column, Container, Dropdown, MouseArea, Row, Slider, TextInput, Text},
-    Element,
+    Element, Theme,
 };
 use crate::{
     app::{Message, KeyEvent},
@@ -10,7 +10,7 @@ use crate::{
     constants::{MIN_INTERVAL_MS, MAX_INTERVAL_MS},
 };
 
-pub fn interval_controls(interval: f64, app_data: &AppData) -> Column<'static, Message> {
+pub fn interval_controls(interval: f64, app_data: &AppData) -> Column<'static, Message, Theme> {
     let interval_value = format!("{}", app_data.interval_ms);
     let current_interval = app_data.interval_ms;
     
@@ -183,7 +183,7 @@ pub fn build_selected_keys_text(keys: &[String]) -> Element<'static, Message> {
                 cosmic::widget::container(
                     Text::new(keys_display)
                         .width(Length::Fill)
-                        .wrapping(cosmic::iced_core::text::Wrapping::WordOrGlyph)
+                        .wrapping(cosmic::iced::core::text::Wrapping::WordOrGlyph)
                 )
                 .padding(10)
                 .width(Length::Fill)
