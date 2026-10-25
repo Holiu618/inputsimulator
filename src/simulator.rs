@@ -171,7 +171,8 @@ pub fn simulate_keys(
                     write_key_events(&uinput_device, &keys, 1, &timeval)?;
 
                     while *running.lock().unwrap() {
-                        write_key_events(&uinput_device, &[], 0, &timeval)?;
+                        // write_key_events(&uinput_device, &[], 0, &timeval)?;
+                        thread::sleep(Duration::from_millis(50));
                     }
 
                     // Release keys
